@@ -26,10 +26,10 @@ export default class BratPlugin extends Plugin {
 		console.log(`loading ${this.APP_NAME}`);
 
 		addIcons();
-		this.updateRibbonIcon();
 
 		this.loadSettings()
 			.then(() => {
+				this.updateRibbonIcon();
 				this.app.workspace.onLayoutReady(() => {
 					this.addSettingTab(new BratSettingsTab(this.app, this));
 

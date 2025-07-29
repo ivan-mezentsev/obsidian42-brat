@@ -70,6 +70,17 @@ export class BratSettingsTab extends PluginSettingTab {
 			});
 			});
 
+		new Setting(containerEl)
+			.setName("Show BRAT icon in ribbon")
+			.setDesc("Display BRAT icon in the ribbon panel for quick access to commands.")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.showRibbonCommands).onChange(async (value: boolean) => {
+					this.plugin.settings.showRibbonCommands = value;
+					await this.plugin.saveSettings();
+					this.plugin.updateRibbonIcon();
+				});
+			});
+
 		promotionalLinks(containerEl, true);
 		containerEl.createEl("hr");
 		new Setting(containerEl).setName("Beta plugin list").setHeading();
@@ -123,7 +134,7 @@ export class BratSettingsTab extends PluginSettingTab {
 						.setTooltip("Change version")
 						.onClick(() => {
 							this.plugin.betaPlugins.displayAddNewPluginModal(true, true, p, bp?.version, bp?.token);
-							this.plugin.app.setting.updatePluginSection();
+							this.display();
 						});
 				})
 				.addButton((btn: ButtonComponent) => {
@@ -152,7 +163,6 @@ export class BratSettingsTab extends PluginSettingTab {
 			cb.setButtonText("Add beta theme")
 				.setCta()
 				.onClick(() => {
-					this.plugin.app.setting.close();
 					new AddNewTheme(this.plugin).open();
 				});
 		});

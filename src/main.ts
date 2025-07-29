@@ -20,14 +20,13 @@ export default class BratPlugin extends Plugin {
 	betaPlugins = new BetaPlugins(this);
 	commands: PluginCommands = new PluginCommands(this);
 	bratApi: BratAPI = new BratAPI(this);
+	ribbonIconEl: HTMLElement | null = null;
 
 	onload() {
 		console.log(`loading ${this.APP_NAME}`);
 
 		addIcons();
-		this.addRibbonIcon("BratIcon", "BRAT", () => {
-			this.commands.ribbonDisplayCommands();
-		});
+		this.updateRibbonIcon();
 
 		this.loadSettings()
 			.then(() => {
@@ -62,6 +61,19 @@ export default class BratPlugin extends Plugin {
 
 	onunload(): void {
 		console.log(`unloading ${this.APP_NAME}`);
+	}
+
+	updateRibbonIcon(): void {
+		if (this.ribbonIconEl) {
+			this.ribbonIconEl.remove();
+			this.ribbonIconEl = null;
+		}
+
+		if (this.settings.showRibbonCommands) {
+			this.ribbonIconEl = this.addRibbonIcon("BratIcon", "BRAT", () => {
+				this.commands.ribbonDisplayCommands();
+			});
+		}
 	}
 
 	async loadSettings(): Promise<void> {
